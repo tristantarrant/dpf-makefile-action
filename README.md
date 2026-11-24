@@ -28,7 +28,7 @@ jobs:
           target: ${{ matrix.target }}
 
   macos-intel:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,7 +38,7 @@ jobs:
           target: macos-intel
 
   macos-arm64:
-    runs-on: macos-14        # arm64 runner
+    runs-on: macos-15        # arm64 runner
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,7 +48,7 @@ jobs:
           target: macos-arm64
 
   macos-universal:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
         with:
@@ -117,9 +117,9 @@ The table below contains all possible targets and supported runners.
 | linux-i686      | linux-i386            | ubuntu-20.04,22.04,24.04 |
 | linux-riscv64   |                       | ubuntu-20.04,22.04,24.04 |
 | linux-x86_64    | linux                 | ubuntu-20.04,22.04,24.04 |
-| macos-intel     |                       | macos-13,14,15           |
-| macos-arm64     |                       | macos-14, macos-15       |
-| macos-universal | macos                 | macos-13,14,15           |
+| macos-intel     |                       | macos-15-intel           |
+| macos-arm64     |                       | macos-15, macos-26       |
+| macos-universal | macos                 | macos-15-intel, macos-15 |
 | macos-10.15     | macos-universal-10.15 | macos-13,14,15           |
 | win32           |                       | ubuntu-20.04,22.04,24.04 |
 | win64           |                       | ubuntu-20.04,22.04,24.04 |
@@ -128,6 +128,7 @@ The table below contains all possible targets and supported runners.
 
 Notes:
  - ubuntu-24.04 runner has [broken 32bit support](https://bugs.launchpad.net/ubuntu/+source/linux-signed-azure/+bug/2071445), which breaks wine and i686 builds
+ - macos-14 was retired on 2026-11-02; use macos-15 (arm64) and macos-15-intel (x86_64)
  - macos-intel uses 10.8 as minimum version
  - macos-universal uses 10.12 as minimum version
  - Windows builds use Ubuntu runners in cross-compilation instead of Windows ones
