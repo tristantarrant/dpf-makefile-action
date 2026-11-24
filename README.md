@@ -140,6 +140,11 @@ Added a native `macos-arm64` target (builds on the arm64 `macos-14`/`macos-15`
 runners). `macos-universal` remains available for a single x86_64+arm64
 binary.
 
+The Linux and macOS dependency setup now installs cairo (`libcairo2-dev` /
+`brew install cairo`) so DPF plugins with `DISTRHO_UI_USE_CAIRO` build their
+UI; pass `extraargs: HAVE_CAIRO=true` to enable it. With `pawpaw: true` the
+Homebrew cairo is still removed in favour of PawPaw's build.
+
 ### 1
 
 Initial release
