@@ -27,10 +27,7 @@ jobs:
         with:
           target: ${{ matrix.target }}
 
-  macos:
-    strategy:
-      matrix:
-        target: [macos-intel, macos-universal]
+  macos-intel:
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +35,27 @@ jobs:
           submodules: recursive
       - uses: distrho/dpf-makefile-action@v1
         with:
-          target: ${{ matrix.target }}
+          target: macos-intel
+
+  macos-arm64:
+    runs-on: macos-14        # arm64 runner
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: distrho/dpf-makefile-action@v1
+        with:
+          target: macos-arm64
+
+  macos-universal:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: distrho/dpf-makefile-action@v1
+        with:
+          target: macos-universal
 
   windows:
     strategy:
@@ -101,6 +118,7 @@ The table below contains all possible targets and supported runners.
 | linux-riscv64   |                       | ubuntu-20.04,22.04,24.04 |
 | linux-x86_64    | linux                 | ubuntu-20.04,22.04,24.04 |
 | macos-intel     |                       | macos-13,14,15           |
+| macos-arm64     |                       | macos-14, macos-15       |
 | macos-universal | macos                 | macos-13,14,15           |
 | macos-10.15     | macos-universal-10.15 | macos-13,14,15           |
 | win32           |                       | ubuntu-20.04,22.04,24.04 |
@@ -115,6 +133,12 @@ Notes:
  - Windows builds use Ubuntu runners in cross-compilation instead of Windows ones
 
 ## Changelog
+
+### 2
+
+Added a native `macos-arm64` target (builds on the arm64 `macos-14`/`macos-15`
+runners). `macos-universal` remains available for a single x86_64+arm64
+binary.
 
 ### 1
 

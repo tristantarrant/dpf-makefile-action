@@ -123,6 +123,7 @@ runs:
         [[ "${PAWPAW_TARGET}" = "linux" || "${PAWPAW_TARGET}" = "pluginval" || "${PAWPAW_TARGET}" = "plugin-validation" ]] && PAWPAW_TARGET=linux-x86_64
         [[ "${PAWPAW_TARGET}" = "macos" ]] && PAWPAW_TARGET=macos-universal
         [[ "${PAWPAW_TARGET}" = "macos-intel" ]] && PAWPAW_TARGET=macos
+        [[ "${PAWPAW_TARGET}" = "macos-arm64" ]] && PAWPAW_TARGET=macos-arm64
         echo "PAWPAW_TARGET=${PAWPAW_TARGET}" >> $GITHUB_ENV
         # make extra args
         echo "MAKE_EXTRA_ARGS=DEBUG=${{ inputs.debug }} HAVE_CAIRO=${{ inputs.pawpaw }} WITH_LTO=${{ inputs.lto }} ${{ inputs.extraargs }}" >> $GITHUB_ENV
@@ -366,6 +367,19 @@ runs:
         make ${{ env.MAKE_EXTRA_ARGS }} features
         make ${{ env.MAKE_EXTRA_ARGS }} -j $(sysctl -n hw.logicalcpu)
         ${{ inputs.dpf_path }}/utils/package-osx-bundles.sh
+    - name: Build macOS arm64
+      if: ${{ inputs.target == 'macos-arm64' }}
+      shell: bash
+      env:
+        CFLAGS: -arch arm64 -DMAC_OS_X_VERSION_MAX_ALLOWED=MAC_OS_X_VERSION_10_12 -DMAC_OS_X_VERSION_MIN_REQUIRED=MAC_OS_X_VERSION_10_12 -mmacosx-version-min=10.12 -stdlib=libc++
+        CXXFLAGS: -arch arm64 -DMAC_OS_X_VERSION_MAX_ALLOWED=MAC_OS_X_VERSION_10_12 -DMAC_OS_X_VERSION_MIN_REQUIRED=MAC_OS_X_VERSION_10_12 -mmacosx-version-min=10.12 -stdlib=libc++ -mtune=generic
+        LDFLAGS: -arch arm64 -mmacosx-version-min=10.12 -stdlib=libc++
+      run: |
+        ${{ inputs.pawpaw == 'true' }} && pushd PawPaw && source local.env ${{ env.PAWPAW_TARGET }} && popd
+        make ${{ env.MAKE_EXTRA_ARGS }} features
+        make ${{ env.MAKE_EXTRA_ARGS }} -j $(sysctl -n hw.logicalcpu)
+        ${{ inputs.dpf_path }}/utils/package-osx-bundles.sh
+
     - name: Build macOS universal
       if: ${{ inputs.target == 'macos' || inputs.target == 'macos-universal' }}
       shell: bash
